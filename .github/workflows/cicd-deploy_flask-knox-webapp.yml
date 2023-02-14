@@ -8,9 +8,6 @@ on:
   push:
     branches:
       - cicd-deploy
-    paths:
-      - 'appsettings.json'
-      
   workflow_dispatch:
 
 jobs:
