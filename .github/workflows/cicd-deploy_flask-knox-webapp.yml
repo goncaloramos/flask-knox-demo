@@ -8,6 +8,8 @@ on:
   push:
     branches:
       - cicd-deploy
+    paths:
+      - 'appsettings.json'
   workflow_dispatch:
 
 jobs:
@@ -53,7 +55,7 @@ jobs:
         with:
           name: python-app
           path: .
-          
+      
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -61,3 +63,15 @@ jobs:
           app-name: 'flask-knox-webapp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4CD4148A8F794B53ABC39045E270571A }}
+
+  syncconfig:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Sync App Configuration
+        uses: azure/appconfiguration-sync@v1
+        with:
+          configurationFile: 'appsettings.json'
+          format: 'json'
+          connectionString: ${{ secrets.AppConfigConnectionString }}
+          separator: ':'
