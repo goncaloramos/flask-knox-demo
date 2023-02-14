@@ -10,6 +10,7 @@ on:
       - cicd-deploy
     paths:
       - 'appsettings.json'
+      
   workflow_dispatch:
 
 jobs:
