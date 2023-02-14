@@ -9,7 +9,7 @@ on:
     branches:
       - cicd-deploy
     paths:
-      - appsettings.json
+      - 'appsettings.json'
   workflow_dispatch:
   
 env:
