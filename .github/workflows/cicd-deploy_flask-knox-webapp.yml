@@ -8,8 +8,13 @@ on:
   push:
     branches:
       - cicd-deploy
+    paths:
+      - appsettings.json
   workflow_dispatch:
-
+  
+env:
+  AZURE_APPCONFIG_CONNECTION_STRING: ${{ secrets.AppConfigConnectionString }}
+  
 jobs:
   build:
     runs-on: ubuntu-latest
