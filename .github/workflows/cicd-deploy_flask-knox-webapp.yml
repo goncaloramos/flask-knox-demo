@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      authdeploy: ${{ steps.init.outputs.authdeploy }}
+      authdeploy: ${{ steps.auth.outputs.authdeploy }}
 
     steps:
       - uses: actions/checkout@v2
@@ -52,6 +52,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Check Deploy Authentication
+        id: auth
         shell: bash
         run: |
           cond=$(az keyvault secret show --vault-name knox-kv --name deploy-condition --query "value")
