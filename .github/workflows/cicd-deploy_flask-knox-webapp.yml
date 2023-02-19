@@ -55,8 +55,8 @@ jobs:
         shell: bash
         run: |
           authdeploy=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")
-          echo authdeploy
-          echo "authdeploy=$authdeploy" >> $GITHUB_OUTPUT
+          echo $authdeploy
+          echo "authdeploy=${authdeploy}" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
