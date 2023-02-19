@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      AUTH: ${{ steps.init.outputs.AUTH }}
+      authdeploy: ${{ steps.init.outputs.authdeploy }}
 
     steps:
       - uses: actions/checkout@v2
@@ -54,11 +54,13 @@ jobs:
       - name: Check Deploy Authentication
         shell: bash
         run: |
-          echo "AUTH=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")" >> $GITHUB_OUTPUT
+          authdeploy=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")
+          echo authdeploy
+          echo "authdeploy=$authdeploy" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ needs.build.outputs.AUTH == 'goncaloramos91' }}
+    if: ${{ needs.build.outputs.authdeploy == 'goncaloramos91' }}
     needs: build
     environment:
       name: 'Production'
