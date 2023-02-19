@@ -18,6 +18,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      stageEnv: ${{ steps.init.outputs.AUTH }}
 
     steps:
       - uses: actions/checkout@v2
@@ -45,18 +47,21 @@ jobs:
             . 
             !venv/
 
+      - name: Check Deploy Authentication
+        id: auth
+        shell: bash
+        run: |
+          echo "AUTH=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")" >> $GITHUB_OUTPUT
+
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ needs.build.outputs.AUTH == 'goncaloramos91' }}
     needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Check Deploy Authentication
-        shell: bash
-        run: |
-          echo "AUTH=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")" >> $GITHUB_ENV
 
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
@@ -65,7 +70,6 @@ jobs:
           path: .
       
       - name: 'Deploy to Azure Web App'
-        if: ${{ env.AUTH  == "goncaloramos91"}}
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
