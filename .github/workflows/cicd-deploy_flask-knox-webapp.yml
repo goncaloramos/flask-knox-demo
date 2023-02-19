@@ -56,22 +56,17 @@ jobs:
         run: |
           authdeploy=$(az keyvault secret show --vault-name knox-kv --name deploy-condition --query "value")
           echo $authdeploy
-          echo "authdeploy=${authdeploy}" >> "$GITHUB_OUTPUT"
+          echo "authdeploy=$authdeploy" >> "$GITHUB_OUTPUT"
 
   deploy:
     runs-on: ubuntu-latest
-    env: 
-      test: ${{ needs.build.outputs.authdeploy }}
+    if: ${{ needs.build.outputs.authdeploy == "true"}}
     needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-
-      - name: test
-        run: echo ${{ env.test }}
-        
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
