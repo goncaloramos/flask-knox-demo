@@ -54,9 +54,9 @@ jobs:
       - name: Check Deploy Authentication
         shell: bash
         run: |
-          authdeploy=$(az keyvault secret show --vault-name knox-kv --name deploy-condition --query "value")
-          echo $authdeploy
-          echo "authdeploy=$authdeploy" >> "$GITHUB_OUTPUT"
+          cond=$(az keyvault secret show --vault-name knox-kv --name deploy-condition --query "value")
+          condition=$(echo $cond | tr -d '"')
+          echo "authdeploy=$condition" >> "$GITHUB_OUTPUT"
 
   deploy:
     runs-on: ubuntu-latest
