@@ -54,7 +54,6 @@ jobs:
 
     steps:
       - name: Check Deploy Authentication
-        env: 
         shell: bash
         run: |
           echo "AUTH=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")" >> $GITHUB_ENV
