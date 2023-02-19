@@ -54,13 +54,13 @@ jobs:
       - name: Check Deploy Authentication
         shell: bash
         run: |
-          authdeploy=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")
+          authdeploy=$(az keyvault secret show --vault-name knox-kv --name deploy-condition --query "value")
           echo $authdeploy
           echo "authdeploy=${authdeploy}" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ needs.build.outputs.authdeploy == 'goncaloramos91' }}
+    if: ${{ needs.build.outputs.authdeploy == 'true' }}
     needs: build
     environment:
       name: 'Production'
