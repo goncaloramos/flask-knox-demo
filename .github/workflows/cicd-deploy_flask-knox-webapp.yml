@@ -60,13 +60,18 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ needs.build.outputs.authdeploy == 'true' }}
+    env: 
+      test: ${{ needs.build.outputs.authdeploy }}
     needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+
+      - name: test
+        run: echo ${{ env.test }}
+        
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
