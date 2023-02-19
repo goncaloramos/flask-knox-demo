@@ -47,8 +47,11 @@ jobs:
             . 
             !venv/
 
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Check Deploy Authentication
-        id: auth
         shell: bash
         run: |
           echo "AUTH=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")" >> $GITHUB_OUTPUT
