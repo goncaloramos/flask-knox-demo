@@ -13,6 +13,7 @@ on:
   
 env:
   AZURE_APPCONFIG_CONNECTION_STRING: ${{ secrets.AppConfigConnectionString }}
+  KEY_VAULT_NAME: "knox-kv"
   
 jobs:
   build:
@@ -52,6 +53,12 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+      - name: Check Deploy Authentication
+        env: 
+        shell: bash
+        run: |
+          echo "AUTH=$(az keyvault secret show --vault-name knox-kv --name hello-kv --query "value")" >> $GITHUB_ENV
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
@@ -59,6 +66,7 @@ jobs:
           path: .
       
       - name: 'Deploy to Azure Web App'
+        if: env.AUTH == "goncaloramos91"
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
