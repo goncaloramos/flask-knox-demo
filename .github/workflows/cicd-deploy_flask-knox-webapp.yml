@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      stageEnv: ${{ steps.init.outputs.AUTH }}
+      AUTH: ${{ steps.init.outputs.AUTH }}
 
     steps:
       - uses: actions/checkout@v2
