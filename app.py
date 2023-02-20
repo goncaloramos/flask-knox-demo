@@ -30,16 +30,19 @@ def favicon():
 def hello():
    name = request.form.get('name')
 
+#    if name:
+#        if name == 'vault':
+#            print('Request for hello page received with name=%s' % name)
+#            print('Retrieving secrets from Key Vault')
+#           # retrieved_kv_secret = az_client.get_secret("hello-kv")
+#            #print("secret " + retrieved_kv_secret.value)
+#           # return render_template('hello.html', name=retrieved_kv_secret.value)
+#        else:
+#            print('Request for hello page received with name=%s' % name)
+#            return render_template('hello.html', name = name)
    if name:
-       if name == 'vault':
-           print('Request for hello page received with name=%s' % name)
-           print('Retrieving secrets from Key Vault')
-          # retrieved_kv_secret = az_client.get_secret("hello-kv")
-           #print("secret " + retrieved_kv_secret.value)
-          # return render_template('hello.html', name=retrieved_kv_secret.value)
-       else:
-           print('Request for hello page received with name=%s' % name)
-           return render_template('hello.html', name = name)
+       print('Request for hello page received with name=%s' % name)
+       return render_template('hello.html', name = name)
    else:
        print('Request for hello page received with no name or blank name -- redirecting')
        # Connect to Azure App Configuration using a connection string.
