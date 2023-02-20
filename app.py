@@ -35,7 +35,7 @@ def hello():
            print('Request for hello page received with name=%s' % name)
            print('Retrieving secrets from Key Vault')
            retrieved_kv_secret = az_client.get_secret("hello-kv")
-           print("secret " + retrieved_secret.value)
+           print("secret " + retrieved_kv_secret.value)
            return render_template('hello.html', name=retrieved_kv_secret.value)
        else:
            print('Request for hello page received with name=%s' % name)
