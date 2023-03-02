@@ -59,7 +59,7 @@ jobs:
         run: |
           az appconfig kv list --name ${{ env.APP_CONFIG_NAME}}
           json=$(az appconfig kv show --key hello --name ${{ env.APP_CONFIG_NAME}})
-          value=$(echo "$json" | jq -r .id >> "$GITHUB_OUTPUT")
+          value=$(echo $json | grep -o '"value": "[^"]*' | grep -o '[^"]*$')
           echo "kvname=$value" >> "$GITHUB_OUTPUT"
 
 
