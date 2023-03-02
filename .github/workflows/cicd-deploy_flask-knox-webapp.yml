@@ -68,7 +68,7 @@ jobs:
         id: auth
         shell: bash
         run: |
-          cond=$(az keyvault secret show --vault-name ${{ needs.build.outputs.authdeploy}} --name deploy-condition --query "value")
+          cond=$(az keyvault secret show --vault-name ${{ needs.build.outputs.kvname}} --name deploy-condition --query "value")
           condition=$(echo $cond | tr -d '"')
           echo "authdeploy=$condition" >> "$GITHUB_OUTPUT"
 
