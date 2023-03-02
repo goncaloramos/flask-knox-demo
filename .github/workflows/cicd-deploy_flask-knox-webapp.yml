@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       authdeploy: ${{ steps.auth.outputs.authdeploy }}
-      kvname: ${{ steps.kv-name.outputs.kvname }}
 
     steps:
       - uses: actions/checkout@v2
@@ -54,7 +53,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Obtain Key Vault Name from Azure App Configuration
-        id: kv-name
+        id: appconf
         shell: bash
         run: |
           az appconfig kv list --name ${{ env.APP_CONFIG_NAME}}
@@ -62,13 +61,11 @@ jobs:
           value=$(echo $json | grep -o '"value": "[^"]*' | grep -o '[^"]*$')
           echo "kvname=$value" >> "$GITHUB_OUTPUT"
 
-
-
       - name: Check Deploy Authentication
         id: auth
         shell: bash
         run: |
-          cond=$(az keyvault secret show --vault-name ${{ needs.build.outputs.kvname}} --name deploy-condition --query "value")
+          cond=$(az keyvault secret show --vault-name ${{ steps.appconf.outputs.kvname }} --name deploy-condition --query "value")
           condition=$(echo $cond | tr -d '"')
           echo "authdeploy=$condition" >> "$GITHUB_OUTPUT"
 
