@@ -14,12 +14,14 @@ on:
 env:
   AZURE_APPCONFIG_CONNECTION_STRING: ${{ secrets.AppConfigConnectionString }}
   KEY_VAULT_NAME: "knox-kv"
+  APP_CONFIG_NAME: "app-config-knox"
   
 jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
       authdeploy: ${{ steps.auth.outputs.authdeploy }}
+      kvname: ${{ steps.kv-name.outputs.kvname }}
 
     steps:
       - uses: actions/checkout@v2
@@ -51,11 +53,22 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Obtain Key Vault Name from Azure App Configuration
+        id: kv-name
+        shell: bash
+        run: |
+          az appconfig kv list --name ${{ env.APP_CONFIG_NAME}}
+          json=$(az appconfig kv show --key hello --name ${{ env.APP_CONFIG_NAME}})
+          value=$(echo "$json" | jq -r .id >> "$GITHUB_OUTPUT")
+          echo "kvname=$value" >> "$GITHUB_OUTPUT"
+
+
+
       - name: Check Deploy Authentication
         id: auth
         shell: bash
         run: |
-          cond=$(az keyvault secret show --vault-name knox-kv --name deploy-condition --query "value")
+          cond=$(az keyvault secret show --vault-name ${{ needs.build.outputs.authdeploy}} --name deploy-condition --query "value")
           condition=$(echo $cond | tr -d '"')
           echo "authdeploy=$condition" >> "$GITHUB_OUTPUT"
 
