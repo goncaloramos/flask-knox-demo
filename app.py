@@ -5,7 +5,8 @@ from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
 import os
 
-connection_string = os.environ.get("AZURE_APPCONFIG_CONNECTION_STRING")
+#connection_string = os.environ.get("AZURE_APPCONFIG_CONNECTION_STRING")
+connection_string = "Endpoint=https://app-config-knox.azconfig.io;Id=5JOl-l4-s0:c/gcBEecO/MMtBPwNlvJ;Secret=TZXxT3KqEd5Wi9dsDeySDgXN1tTcIccBNn++QAoT8DM="
 
 app = Flask(__name__)
 
@@ -31,7 +32,7 @@ def hello():
            az_credential = DefaultAzureCredential(exclude_interactive_browser_credential=False)
 
            az_configapp = AzureAppConfigurationProvider.load(connection_string=connection_string)
-           kv_name = az_configapp['kv-name']
+           kv_name = az_configapp['vault-name']
            print("kv name: " + kv_name)
            KVUri = f"https://{kv_name}.vault.azure.net"
            print("kv uri: " + KVUri)
@@ -39,6 +40,7 @@ def hello():
            retrieved_kv_secret = az_client.get_secret("hello-kv")
            print("secret " + retrieved_kv_secret.value)
            return render_template('hello.html', name=retrieved_kv_secret.value)
+           #return render_template('hello.html', name=kv_name)
        else:
            print('Request for hello page received with name=%s' % name)
            return render_template('hello.html', name = name)
