@@ -29,7 +29,7 @@ def hello():
        if name == 'vault':
            print('Request for hello page received with name=%s' % name)
            print('Retrieving secrets from Key Vault')
-           az_credential = DefaultAzureCredential(exclude_interactive_browser_credential=False)
+           az_credential = DefaultAzureCredential()
 
            az_configapp = AzureAppConfigurationProvider.load(connection_string=connection_string)
            kv_name = az_configapp['vault-name']
