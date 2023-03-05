@@ -8,13 +8,12 @@ import os
 connection_string = os.environ.get("AZURE_APPCONFIG_CONNECTION_STRING")
 
 az_credential = DefaultAzureCredential(exclude_interactive_browser_credential=False)
-az_client = SecretClient(vault_url=KVUri, credential=az_credential)
 
 az_configapp = AzureAppConfigurationProvider.load(connection_string=connection_string)
 kv_name = az_configapp['kv-name']
 
 KVUri = f"https://{kv_name}.vault.azure.net"
-
+az_client = SecretClient(vault_url=KVUri, credential=az_credential)
 
 app = Flask(__name__)
 
