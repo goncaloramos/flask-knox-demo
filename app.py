@@ -6,12 +6,12 @@ from azure.identity import DefaultAzureCredential
 import os
 
 connection_string = os.environ.get("AZURE_APPCONFIG_CONNECTION_STRING")
-#kv_name = os.environ.get("KEY_VAULT_NAME")
+kv_name = os.environ.get("KEY_VAULT_NAME")
 
-#KVUri = f"https://knox-kv.vault.azure.net"
+KVUri = f"https://knox-kv.vault.azure.net"
 
-#az_credential = DefaultAzureCredential(exclude_interactive_browser_credential=False)
-#az_client = SecretClient(vault_url=KVUri, credential=az_credential)
+az_credential = DefaultAzureCredential(exclude_interactive_browser_credential=False)
+az_client = SecretClient(vault_url=KVUri, credential=az_credential)
 
 app = Flask(__name__)
 
@@ -30,19 +30,16 @@ def favicon():
 def hello():
    name = request.form.get('name')
 
-#    if name:
-#        if name == 'vault':
-#            print('Request for hello page received with name=%s' % name)
-#            print('Retrieving secrets from Key Vault')
-#           # retrieved_kv_secret = az_client.get_secret("hello-kv")
-#            #print("secret " + retrieved_kv_secret.value)
-#           # return render_template('hello.html', name=retrieved_kv_secret.value)
-#        else:
-#            print('Request for hello page received with name=%s' % name)
-#            return render_template('hello.html', name = name)
    if name:
-       print('Request for hello page received with name=%s' % name)
-       return render_template('hello.html', name = name)
+       if name == 'vault':
+           print('Request for hello page received with name=%s' % name)
+           print('Retrieving secrets from Key Vault')
+          # retrieved_kv_secret = az_client.get_secret("hello-kv")
+           #print("secret " + retrieved_kv_secret.value)
+          # return render_template('hello.html', name=retrieved_kv_secret.value)
+       else:
+           print('Request for hello page received with name=%s' % name)
+           return render_template('hello.html', name = name)
    else:
        print('Request for hello page received with no name or blank name -- redirecting')
        # Connect to Azure App Configuration using a connection string.
