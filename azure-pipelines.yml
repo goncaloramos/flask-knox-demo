@@ -5,9 +5,6 @@
 
 trigger:
 - main
-
-pool:
-  vmImage: 'ubuntu-latest'
   
 stages:
 - stage: build
@@ -26,15 +23,3 @@ stages:
         pip install pytest pytest-azurepipelines
         pytest
       displayName: 'pytest'
-      
-- stage: Deploy
-  dependsOn: build
-  jobs:
-    - deployment: DeployPython
-      displayName: Deploy Python
-      environment: 'dev'
-      strategy:
-       runOnce:
-         deploy:
-           steps:
-             - script: echo Hello World
