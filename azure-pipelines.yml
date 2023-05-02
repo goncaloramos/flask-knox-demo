@@ -25,23 +25,16 @@ stages:
         pytest
       displayName: 'pytest'
       
-- stage: Approval
+- stage: Deploy
   dependsOn: build
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.7'
-  displayName: 'Use Python $(python.version)'
-
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
-
-- script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+  jobs:
+    - deployment: DeployPython
+      displayName: Deploy Python
+      pool:
+        vmImage: 'Ubuntu-latest'
+      environment: 'dev'
+      strategy:
+       runOnce:
+         deploy:
+           steps:
+             - script: echo Hello World
