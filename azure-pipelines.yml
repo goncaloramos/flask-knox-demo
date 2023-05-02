@@ -5,12 +5,14 @@
 
 trigger:
 - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+  
 stages:
 - stage: build
   jobs:
   - job: buildPythonFlaskApp
-    pool:
-      vmImage: ubuntu-latest
     steps:
     - task: UsePythonVersion@0
       inputs:
@@ -30,8 +32,6 @@ stages:
   jobs:
     - deployment: DeployPython
       displayName: Deploy Python
-      pool:
-        vmImage: 'Ubuntu-latest'
       environment: 'dev'
       strategy:
        runOnce:
